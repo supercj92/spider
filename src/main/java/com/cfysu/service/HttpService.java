@@ -27,7 +27,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 @Slf4j
 @Service
 public class HttpService implements InitializingBean{
-    public static final String BASE_URL = "null";
+    public static final String BASE_URL = "http://baidu.com/";
     private NoLimitServiceApi mNoLimitServiceApi;
     /**
      * 初始化Retrifit网络请求

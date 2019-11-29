@@ -12,7 +12,10 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +30,15 @@ public class ParseService implements InitializingBean{
     @Override
     public void afterPropertiesSet() throws Exception {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-        String path = this.getClass().getClassLoader().getResource("script.js").getPath();//获取文件路径
-        engine.eval(new FileReader(new File(path)));//执行文件
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("script.js");//获取文件路径
+        byte[] buffer = new byte[resourceAsStream.available()];
+        resourceAsStream.read(buffer);
+
+        File tempFile = new File("./script.js");
+        OutputStream outputStream = new FileOutputStream(tempFile);
+        outputStream.write(buffer);
+
+        engine.eval(new FileReader(tempFile));//执行文件
         invocable = (Invocable) engine;
     }
 
