@@ -41,7 +41,7 @@ public class FetchTask {
     }
 
     private  void fetchVideoInfo(){
-        Observable<String> stringObservable = httpService.getmNoLimit91PornServiceApi().indexPhp();
+        Observable<String> stringObservable = httpService.getmNoLimitServiceApi().indexPhp();
         String indexHtml = stringObservable.blockingFirst();
         List<Video> videoList = parseService.parseIndex(indexHtml);
 
@@ -50,7 +50,7 @@ public class FetchTask {
             if(videoFromDB != null){
                 continue;
             }
-            Observable<String> videoPage = httpService.getmNoLimit91PornServiceApi().getVideoPlayPage(item.getViewKey(), RandomIPAdderssUtils.getRandomIPAdderss());
+            Observable<String> videoPage = httpService.getmNoLimitServiceApi().getVideoPlayPage(item.getViewKey(), RandomIPAdderssUtils.getRandomIPAdderss());
             String videoHtml = videoPage.blockingFirst();
             try {
                 String videoUrl = parseService.parseVideoPlayUrl(videoHtml);

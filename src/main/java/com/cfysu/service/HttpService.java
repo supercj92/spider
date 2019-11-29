@@ -1,6 +1,6 @@
 package com.cfysu.service;
 
-import com.cfysu.http.NoLimit91PornServiceApi;
+import com.cfysu.http.NoLimitServiceApi;
 import io.reactivex.annotations.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
@@ -12,14 +12,10 @@ import org.springframework.stereotype.Service;
 //import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 //import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.annotations.Nullable;
 import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -31,8 +27,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 @Slf4j
 @Service
 public class HttpService implements InitializingBean{
-    public static final String BASE_URL = "https://627.workarea7.live";
-    private NoLimit91PornServiceApi mNoLimit91PornServiceApi;
+    public static final String BASE_URL = "null";
+    private NoLimitServiceApi mNoLimitServiceApi;
     /**
      * 初始化Retrifit网络请求
      */
@@ -89,7 +85,7 @@ public class HttpService implements InitializingBean{
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
 
-        mNoLimit91PornServiceApi = retrofit.create(NoLimit91PornServiceApi.class);
+        mNoLimitServiceApi = retrofit.create(NoLimitServiceApi.class);
     }
 
     @Override
@@ -97,11 +93,11 @@ public class HttpService implements InitializingBean{
         initRetrofit();
     }
 
-    public NoLimit91PornServiceApi getmNoLimit91PornServiceApi() {
-        return mNoLimit91PornServiceApi;
+    public NoLimitServiceApi getmNoLimitServiceApi() {
+        return mNoLimitServiceApi;
     }
 
-    public void setmNoLimit91PornServiceApi(NoLimit91PornServiceApi mNoLimit91PornServiceApi) {
-        this.mNoLimit91PornServiceApi = mNoLimit91PornServiceApi;
+    public void setmNoLimitServiceApi(NoLimitServiceApi mNoLimitServiceApi) {
+        this.mNoLimitServiceApi = mNoLimitServiceApi;
     }
 }

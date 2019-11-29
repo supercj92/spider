@@ -27,7 +27,7 @@ public class ParseService implements InitializingBean{
     @Override
     public void afterPropertiesSet() throws Exception {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-        String path = this.getClass().getResource("script.js").getPath();//获取文件路径
+        String path = this.getClass().getClassLoader().getResource("script.js").getPath();//获取文件路径
         engine.eval(new FileReader(new File(path)));//执行文件
         invocable = (Invocable) engine;
     }
@@ -77,27 +77,27 @@ public class ParseService implements InitializingBean{
      */
 //    public static BaseResult parseHot(String html) {
 //        int totalPage = 1;
-//        List<Video> unLimit91PornItemList = new ArrayList<>();
+//        List<Video> unLimitItemList = new ArrayList<>();
 //        Document doc = Jsoup.parse(html);
 //        Element body = doc.getElementById("fullside");
 //
 //        Elements listchannel = body.getElementsByClass("listchannel");
 //        for (Element element : listchannel) {
-//            Video unLimit91PornItem = new Video();
+//            Video unLimitItem = new Video();
 //            String contentUrl = element.select("a").first().attr("href");
 //            Logger.d(contentUrl);
 //            contentUrl = contentUrl.substring(0, contentUrl.indexOf("&"));
 //            Logger.d(contentUrl);
 //            String viewKey = contentUrl.substring(contentUrl.indexOf("=") + 1);
-//            unLimit91PornItem.setViewKey(viewKey);
+//            unLimitItem.setViewKey(viewKey);
 //
 //            String imgUrl = element.select("a").first().select("img").first().attr("src");
 //            Logger.d(imgUrl);
-//            unLimit91PornItem.setImgUrl(imgUrl);
+//            unLimitItem.setImgUrl(imgUrl);
 //
 //            String title = element.select("a").first().select("img").first().attr("title");
 //            Logger.d(title);
-//            unLimit91PornItem.setTitle(title);
+//            unLimitItem.setTitle(title);
 //
 //
 //            String allInfo = element.text();
@@ -105,14 +105,14 @@ public class ParseService implements InitializingBean{
 //            int sindex = allInfo.indexOf("时长");
 //
 //            String duration = allInfo.substring(sindex + 3, sindex + 8);
-//            unLimit91PornItem.setDuration(duration);
+//            unLimitItem.setDuration(duration);
 //
 //            int start = allInfo.indexOf("添加时间");
 //            String info = allInfo.substring(start);
-//            unLimit91PornItem.setInfo(info.replace("还未被评分", ""));
+//            unLimitItem.setInfo(info.replace("还未被评分", ""));
 //            Logger.d(info);
 //
-//            unLimit91PornItemList.add(unLimit91PornItem);
+//            unLimitItemList.add(unLimitItem);
 //        }
 //        //总页数
 //        Element pagingnav = body.getElementById("paging");
@@ -126,7 +126,7 @@ public class ParseService implements InitializingBean{
 //        }
 //        BaseResult baseResult = new BaseResult();
 //        baseResult.setTotalPage(totalPage);
-//        baseResult.setUnLimit91PornItemList(unLimit91PornItemList);
+//        baseResult.setUnLimitItemList(unLimitItemList);
 //        return baseResult;
 //    }
 

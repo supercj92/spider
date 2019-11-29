@@ -9,15 +9,10 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
-/**
- * @author flymegoc
- * @date 2017/11/14
- * @describe
- */
 
-public interface NoLimit91PornServiceApi {
+public interface NoLimitServiceApi {
     /**
-     * 91主页index.php
+     * 主页index.php
      *
      * @return body
      */
@@ -28,7 +23,7 @@ public interface NoLimit91PornServiceApi {
      * 访问页面获取视频地址页面
      *
      * @param viewkey   视频的key
-     * @param ipAddress 随机访问地址，为了突破限制游客每天10次观看次数
+     * @param ipAddress 随机访问地址
      * @return body
      */
     @GET("/view_video.php")
