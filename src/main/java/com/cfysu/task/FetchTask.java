@@ -2,6 +2,7 @@ package com.cfysu.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cfysu.dao.VideoDao;
+import com.cfysu.model.BaseResult;
 import com.cfysu.model.Video;
 import com.cfysu.service.HttpService;
 import com.cfysu.service.ParseService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import retrofit2.HttpException;
 
 import java.util.List;
 
@@ -30,20 +32,37 @@ public class FetchTask {
     @Autowired
     private VideoDao videoDao;
 
+    private Integer currentPage = 2;
+
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void runTask(){
         try {
             fetchVideoInfo();
         }catch (Exception e){
+            System.out.println("task fail!!!current page:" + currentPage);
+            if(e instanceof HttpException){
+                System.out.println(((HttpException)e).response().raw().request().url());
+            }
             e.printStackTrace();
         }
     }
 
     private  void fetchVideoInfo(){
-        Observable<String> stringObservable = httpService.getmNoLimitServiceApi().indexPhp();
+        System.out.println("task start...current page:" + currentPage);
+        Observable<String> stringObservable = httpService.getmNoLimitServiceApi().getCategoryPage("rf", "basic", currentPage, "m");
         String indexHtml = stringObservable.blockingFirst();
-        List<Video> videoList = parseService.parseIndex(indexHtml);
+        BaseResult baseResult = parseService.parseCategory(indexHtml);
+
+        Integer totalPage = baseResult.getTotalPage();
+        if(currentPage < totalPage){
+            currentPage ++;
+        }
+        if(currentPage.equals(totalPage)){
+            currentPage = 2;
+        }
+
+        List<Video> videoList = baseResult.getVideoList();
 
         for (Video item : videoList){
             Video videoFromDB = videoDao.findByViewKey(item.getViewKey());
@@ -60,7 +79,5 @@ public class FetchTask {
             }
             videoDao.save(item);
         }
-        System.out.println(JSONObject.toJSONString(videoList));
-
     }
 }

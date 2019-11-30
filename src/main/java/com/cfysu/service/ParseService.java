@@ -1,6 +1,8 @@
 package com.cfysu.service;
 
+import com.cfysu.model.BaseResult;
 import com.cfysu.model.Video;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -85,60 +87,54 @@ public class ParseService implements InitializingBean{
      * @param html 类别
      * @return 列表
      */
-//    public static BaseResult parseHot(String html) {
-//        int totalPage = 1;
-//        List<Video> unLimitItemList = new ArrayList<>();
-//        Document doc = Jsoup.parse(html);
-//        Element body = doc.getElementById("fullside");
-//
-//        Elements listchannel = body.getElementsByClass("listchannel");
-//        for (Element element : listchannel) {
-//            Video unLimitItem = new Video();
-//            String contentUrl = element.select("a").first().attr("href");
-//            Logger.d(contentUrl);
-//            contentUrl = contentUrl.substring(0, contentUrl.indexOf("&"));
-//            Logger.d(contentUrl);
-//            String viewKey = contentUrl.substring(contentUrl.indexOf("=") + 1);
-//            unLimitItem.setViewKey(viewKey);
-//
-//            String imgUrl = element.select("a").first().select("img").first().attr("src");
-//            Logger.d(imgUrl);
-//            unLimitItem.setImgUrl(imgUrl);
-//
-//            String title = element.select("a").first().select("img").first().attr("title");
-//            Logger.d(title);
-//            unLimitItem.setTitle(title);
-//
-//
-//            String allInfo = element.text();
-//
-//            int sindex = allInfo.indexOf("时长");
-//
-//            String duration = allInfo.substring(sindex + 3, sindex + 8);
-//            unLimitItem.setDuration(duration);
-//
-//            int start = allInfo.indexOf("添加时间");
-//            String info = allInfo.substring(start);
-//            unLimitItem.setInfo(info.replace("还未被评分", ""));
-//            Logger.d(info);
-//
-//            unLimitItemList.add(unLimitItem);
-//        }
-//        //总页数
-//        Element pagingnav = body.getElementById("paging");
-//        Elements a = pagingnav.select("a");
-//        if (a.size() > 2) {
-//            String ppp = a.get(a.size() - 2).text();
-//            if (TextUtils.isDigitsOnly(ppp)) {
-//                totalPage = Integer.parseInt(ppp);
-//                Logger.d("总页数：" + totalPage);
-//            }
-//        }
-//        BaseResult baseResult = new BaseResult();
-//        baseResult.setTotalPage(totalPage);
-//        baseResult.setUnLimitItemList(unLimitItemList);
-//        return baseResult;
-//    }
+    public BaseResult parseCategory(String html) {
+        int totalPage = 1;
+        List<Video> videoList = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Element body = doc.getElementById("fullside");
+
+        Elements listchannel = body.getElementsByClass("listchannel");
+        for (Element element : listchannel) {
+            Video unLimitItem = new Video();
+            String contentUrl = element.select("a").first().attr("href");
+            contentUrl = contentUrl.substring(0, contentUrl.indexOf("&"));
+            String viewKey = contentUrl.substring(contentUrl.indexOf("=") + 1);
+            unLimitItem.setViewKey(viewKey);
+
+            String imgUrl = element.select("a").first().select("img").first().attr("src");
+            unLimitItem.setImgUrl(imgUrl);
+
+            String title = element.select("a").first().select("img").first().attr("title");
+            unLimitItem.setTitle(title);
+
+
+            String allInfo = element.text();
+
+            int sindex = allInfo.indexOf("时长");
+
+            String duration = allInfo.substring(sindex + 3, sindex + 8);
+            unLimitItem.setDuration(duration);
+
+            int start = allInfo.indexOf("添加时间");
+            String info = allInfo.substring(start);
+            unLimitItem.setInfo(info.replace("还未被评分", ""));
+
+            videoList.add(unLimitItem);
+        }
+        //总页数
+        Element pagingnav = body.getElementById("paging");
+        Elements a = pagingnav.select("a");
+        if (a.size() > 2) {
+            String ppp = a.get(a.size() - 2).text();
+            if (StringUtils.isNumeric((ppp))) {
+                totalPage = Integer.parseInt(ppp);
+            }
+        }
+        BaseResult baseResult = new BaseResult();
+        baseResult.setTotalPage(totalPage);
+        baseResult.setVideoList(videoList);
+        return baseResult;
+    }
 
     /**
      * 解析视频播放连接
