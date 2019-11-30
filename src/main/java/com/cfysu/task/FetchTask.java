@@ -85,7 +85,7 @@ public class FetchTask {
                 item.setInsertDate(new Date());
                 videoDao.save(item);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("parseVideoPlayUrl error", e);
             }
         }
         log.info("task end...current page:{}", currentPage);
