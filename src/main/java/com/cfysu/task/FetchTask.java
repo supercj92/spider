@@ -91,7 +91,7 @@ public class FetchTask {
                 log.error("parseVideoPlayUrl error", e);
             }
         }
-        log.info("task end...current page:{}", currentPage);
+        log.info("task end...current page:{},total page:{},category:{}", currentPage, totalPage, category);
     }
 
     public Integer getCurrentPage() {
