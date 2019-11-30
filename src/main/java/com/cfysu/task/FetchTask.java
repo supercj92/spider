@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import retrofit2.HttpException;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +34,11 @@ public class FetchTask {
     @Autowired
     private VideoDao videoDao;
 
-    private Integer currentPage = 2;
+    private Integer currentPage = 50;
+
+    private String category = "rf";
+
+    public static final String CMD = "stop";
 
 
     @Scheduled(cron = "0 0/1 * * * ?")
@@ -48,9 +53,12 @@ public class FetchTask {
         }
     }
 
-    private  void fetchVideoInfo(){
+    private void fetchVideoInfo(){
+        if(CMD.equals(category)){
+            return;
+        }
         log.info("task start...current page:{}", currentPage);
-        Observable<String> stringObservable = httpService.getmNoLimitServiceApi().getCategoryPage("rf", "basic", currentPage, "m");
+        Observable<String> stringObservable = httpService.getmNoLimitServiceApi().getCategoryPage(category, "basic", currentPage, "m");
         String indexHtml = stringObservable.blockingFirst();
         BaseResult baseResult = parseService.parseCategory(indexHtml);
 
@@ -74,11 +82,28 @@ public class FetchTask {
             try {
                 String videoUrl = parseService.parseVideoPlayUrl(videoHtml);
                 item.setVideoUrl(videoUrl);
+                item.setInsertDate(new Date());
+                videoDao.save(item);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            videoDao.save(item);
         }
         log.info("task end...current page:{}", currentPage);
+    }
+
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

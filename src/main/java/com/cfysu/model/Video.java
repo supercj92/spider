@@ -35,6 +35,9 @@ public class Video implements Serializable {
 
     @Column
     private String videoUrl;
+
+    @Column
+    private Date insertDate;
 //    private int downloadId;
 //    private int favorite;
 //
@@ -104,7 +107,15 @@ public class Video implements Serializable {
         this.videoUrl = videoUrl;
     }
 
-//    public int getDownloadId() {
+    public Date getInsertDate() {
+        return insertDate;
+    }
+
+    public void setInsertDate(Date insertDate) {
+        this.insertDate = insertDate;
+    }
+
+    //    public int getDownloadId() {
 //        return downloadId;
 //    }
 //

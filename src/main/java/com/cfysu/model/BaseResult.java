@@ -1,6 +1,5 @@
 package com.cfysu.model;
 
-import lombok.Data;
 
 import java.util.List;
 
@@ -9,6 +8,7 @@ import java.util.List;
  */
 public class BaseResult {
     private Integer totalPage;
+    private Integer currentPage;
     private List<Video> videoList;
 
     public Integer getTotalPage() {
@@ -25,5 +25,13 @@ public class BaseResult {
 
     public void setVideoList(List<Video> videoList) {
         this.videoList = videoList;
+    }
+
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
     }
 }
