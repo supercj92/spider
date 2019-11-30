@@ -38,6 +38,8 @@ public class FetchTask {
 
     private String category = "rf";
 
+    private Integer totalPage = 0;
+
     public static final String CMD = "stop";
 
 
@@ -63,6 +65,7 @@ public class FetchTask {
         BaseResult baseResult = parseService.parseCategory(indexHtml);
 
         Integer totalPage = baseResult.getTotalPage();
+        this.totalPage = totalPage;
         if(currentPage < totalPage){
             currentPage ++;
         }
@@ -105,5 +108,13 @@ public class FetchTask {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Integer getTotalPage() {
+        return totalPage;
+    }
+
+    public void setTotalPage(Integer totalPage) {
+        this.totalPage = totalPage;
     }
 }

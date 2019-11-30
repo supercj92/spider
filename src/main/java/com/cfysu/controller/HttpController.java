@@ -57,7 +57,7 @@ public class HttpController {
 
     @GetMapping("/taskInfo")
     public String getTask(){
-        return fetchTask.getCategory() + ":" + fetchTask.getCurrentPage();
+        return fetchTask.getCategory() + ":" + fetchTask.getCurrentPage() + ":" + fetchTask.getTotalPage();
     }
 
     @GetMapping("/video")
