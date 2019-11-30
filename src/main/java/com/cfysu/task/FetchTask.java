@@ -1,6 +1,5 @@
 package com.cfysu.task;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cfysu.dao.VideoDao;
 import com.cfysu.model.BaseResult;
 import com.cfysu.model.Video;
@@ -8,6 +7,7 @@ import com.cfysu.service.HttpService;
 import com.cfysu.service.ParseService;
 import com.cfysu.util.RandomIPAdderssUtils;
 import io.reactivex.Observable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2019/11/9.
  */
+@Slf4j
 @Service
 @EnableScheduling
 public class FetchTask {
@@ -40,16 +41,15 @@ public class FetchTask {
         try {
             fetchVideoInfo();
         }catch (Exception e){
-            System.out.println("task fail!!!current page:" + currentPage);
+            log.error("task fail!!!current page:{}", currentPage);
             if(e instanceof HttpException){
-                System.out.println(((HttpException)e).response().raw().request().url());
+                log.error(((HttpException)e).response().raw().request().url().toString(), e);
             }
-            e.printStackTrace();
         }
     }
 
     private  void fetchVideoInfo(){
-        System.out.println("task start...current page:" + currentPage);
+        log.info("task start...current page:{}", currentPage);
         Observable<String> stringObservable = httpService.getmNoLimitServiceApi().getCategoryPage("rf", "basic", currentPage, "m");
         String indexHtml = stringObservable.blockingFirst();
         BaseResult baseResult = parseService.parseCategory(indexHtml);
@@ -79,5 +79,6 @@ public class FetchTask {
             }
             videoDao.save(item);
         }
+        log.info("task end...current page:{}", currentPage);
     }
 }
