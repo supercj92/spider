@@ -7,6 +7,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 //import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 //import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -27,7 +28,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 @Slf4j
 @Service
 public class HttpService implements InitializingBean{
-    public static final String BASE_URL = "http://baidu.com/";
+
+    @Value("${base.url}")
+    public String BASE_URL = "http://www.baidu.com/";
     private NoLimitServiceApi mNoLimitServiceApi;
     /**
      * 初始化Retrifit网络请求
