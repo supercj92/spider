@@ -93,7 +93,7 @@
             var titleLike = document.getElementById('titleLike');
             function search() {
                 var title =  titleLike.value;
-                window.location.href= 'http://144.202.95.109:8888/res/video?titleLike=' + title;
+                window.location.href= '/res/video?titleLike=' + title;
 //                window.location.href= 'http://localhost:8888/res/video?titleLike=' + title;
             }
             var btn = document.getElementById('searchBtn');
@@ -103,7 +103,7 @@
             var page = document.getElementById('page');
             function go() {
                 var page_no =  page.value;
-                window.location.href= 'http://144.202.95.109:8888/res/video?currentPage=' + page_no + '&titleLike=' + titleLike.value;
+                window.location.href= '/res/video?currentPage=' + page_no + '&titleLike=' + titleLike.value;
 //                window.location.href= 'http://localhost:8888/res/video?currentPage=' + page_no + '&titleLike=' + titleLike.value;
             }
             var pageBtn = document.getElementById('pageBtn');
