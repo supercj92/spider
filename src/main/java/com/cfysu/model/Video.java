@@ -38,6 +38,9 @@ public class Video implements Serializable {
 
     @Column
     private Date insertDate;
+
+    @Column
+    private String category_src;
 //    private int downloadId;
 //    private int favorite;
 //
@@ -113,6 +116,14 @@ public class Video implements Serializable {
 
     public void setInsertDate(Date insertDate) {
         this.insertDate = insertDate;
+    }
+
+    public String getCategory_src() {
+        return category_src;
+    }
+
+    public void setCategory_src(String category_src) {
+        this.category_src = category_src;
     }
 
     //    public int getDownloadId() {

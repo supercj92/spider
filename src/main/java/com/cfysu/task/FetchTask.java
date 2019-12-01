@@ -42,6 +42,10 @@ public class FetchTask {
 
     public static final String CMD = "stop";
 
+    private String[] catgoryArray = new String[]{"rf","mf","tf","md","top"};
+
+    private Integer categoryIndex = 0;
+
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void runTask(){
@@ -70,6 +74,11 @@ public class FetchTask {
             currentPage ++;
         }
         if(currentPage.equals(totalPage)){
+            if(categoryIndex == catgoryArray.length){
+                categoryIndex = 0;
+            }
+            category = catgoryArray[categoryIndex];
+            categoryIndex++;
             currentPage = 2;
         }
 
@@ -86,6 +95,7 @@ public class FetchTask {
                 String videoUrl = parseService.parseVideoPlayUrl(videoHtml);
                 item.setVideoUrl(videoUrl);
                 item.setInsertDate(new Date());
+                item.setCategory_src(category);
                 videoDao.save(item);
             } catch (Exception e) {
                 log.error("parseVideoPlayUrl error", e);
