@@ -14,6 +14,6 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter {
         public void addInterceptors(InterceptorRegistry registry) {
             //注册拦截器
             InterceptorRegistration iRegistration = registry.addInterceptor(new LoginInterceptor());
-            iRegistration.addPathPatterns("/res/**");
+            iRegistration.addPathPatterns("/res/**", "/admin/**");
         }
     }

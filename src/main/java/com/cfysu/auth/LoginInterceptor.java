@@ -8,6 +8,10 @@ import javax.servlet.http.HttpSession;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
+    public static String globalSwitch = "";
+
+    public static final String SWITCH_CLOSE = "CLOSE";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //获取请求的地址（根域名以外的部分）
@@ -19,10 +23,24 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         String token = (String) session.getAttribute("token");
         if (token != null){
+            if(uri.contains("/open")){
+                return true;
+            }
+            if(SWITCH_CLOSE.equals(globalSwitch)){
+                return false;
+            }
             return true;
         }
         request.setAttribute("msg","input token");
 //        request.getRequestDispatcher("/WEB-INF/jsp/userlogin.jsp").forward(request,response);
         return false;
+    }
+
+    public String getGlobalSwitch() {
+        return globalSwitch;
+    }
+
+    public void setGlobalSwitch(String globalSwitch) {
+        this.globalSwitch = globalSwitch;
     }
 }

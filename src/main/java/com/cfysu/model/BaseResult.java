@@ -9,6 +9,7 @@ import java.util.List;
 public class BaseResult {
     private Integer totalPage;
     private Integer currentPage;
+    private Integer totalRecord;
     private List<Video> videoList;
 
     public Integer getTotalPage() {
@@ -33,5 +34,13 @@ public class BaseResult {
 
     public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public Integer getTotalRecord() {
+        return totalRecord;
+    }
+
+    public void setTotalRecord(Integer totalRecord) {
+        this.totalRecord = totalRecord;
     }
 }

@@ -18,6 +18,7 @@ import retrofit2.HttpException;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.List;
 
@@ -50,15 +51,21 @@ public class FetchTask implements InitializingBean {
 
     private Integer categoryIndex = 0;
 
+    private Integer failCount = 0;
+
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void runTask(){
         try {
             fetchVideoInfo();
+            failCount = 0;
         }catch (Exception e){
-            log.error("task fail!!!current page:{}", currentPage);
+            log.error("task fail!!!current page:" + currentPage, e);
             if(e instanceof HttpException){
                 log.error(((HttpException)e).response().raw().request().url().toString(), e);
+            }
+            if(++failCount > 50){
+                this.currentPage++;
             }
         }
     }
@@ -74,17 +81,6 @@ public class FetchTask implements InitializingBean {
 
         Integer totalPage = baseResult.getTotalPage();
         this.totalPage = totalPage;
-        if(currentPage < totalPage){
-            currentPage ++;
-        }
-        if(currentPage.equals(totalPage)){
-            if(categoryIndex == catgoryArray.length){
-                categoryIndex = 0;
-            }
-            category = catgoryArray[categoryIndex];
-            categoryIndex++;
-            currentPage = 2;
-        }
 
         List<Video> videoList = baseResult.getVideoList();
 
@@ -104,6 +100,19 @@ public class FetchTask implements InitializingBean {
             } catch (Exception e) {
                 log.error("parseVideoPlayUrl error", e);
             }
+        }
+
+//        switch category and incr page
+        if(currentPage < totalPage){
+            currentPage ++;
+        }
+        if(currentPage.equals(totalPage)){
+            if(categoryIndex == catgoryArray.length){
+                categoryIndex = 0;
+            }
+            category = catgoryArray[categoryIndex];
+            categoryIndex++;
+            currentPage = 2;
         }
         log.info("task end...current page:{},total page:{},category:{}", currentPage, totalPage, category);
     }
@@ -137,12 +146,13 @@ public class FetchTask implements InitializingBean {
         log.info("resume task from disk...");
         ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("/upload/task.data"));
         Task task = (Task)objectInputStream.readObject();
-        if(task.getCategory() != null){
+        if(task != null && task.getCategory() != null){
             this.category = task.getCategory();
         }
 
-        if(task.getCurrentPage() != null){
+        if(task != null && task.getCurrentPage() != null){
             this.currentPage = task.getCurrentPage();
         }
+        log.info("task from disk...category:{},page:{}", category, currentPage);
     }
 }

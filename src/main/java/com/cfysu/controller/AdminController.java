@@ -2,16 +2,17 @@ package com.cfysu.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cfysu.auth.LoginInterceptor;
 import com.cfysu.dao.VideoDao;
 import com.cfysu.model.BaseResult;
 import com.cfysu.model.Video;
 import com.cfysu.task.FetchTask;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,13 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Administrator on 2019/11/9.
  */
 @RestController
-@RequestMapping("/res")
-public class ResController {
+@RequestMapping("/admin")
+public class AdminController implements ApplicationContextAware{
     @Autowired
     private FetchTask fetchTask;
 
     @Autowired
     private VideoDao videoDao;
+
+    private ApplicationContext applicationContext;
 
     @Value("${auth.token}")
     private String token;
@@ -64,14 +67,36 @@ public class ResController {
     }
 
     @GetMapping("/video")
-    public BaseResult showVideoList(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "16") Integer pageSize){
+    public BaseResult showVideoList(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "16") Integer pageSize, @RequestParam(defaultValue = "") String titleLike){
         BaseResult baseResult = new BaseResult();
-        Sort.Direction sort =  Sort.Direction.ASC;
+        Sort.Direction sort =  Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(currentPage, pageSize, sort, "insertDate");
-        Page<Video> all = videoDao.findAll(pageable);
+        Video video = new Video();
+        video.setTitle(titleLike);
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withMatcher("title" ,ExampleMatcher.GenericPropertyMatchers.contains());
+        Example<Video> example = Example.of(video, exampleMatcher);
+        Page<Video> all = videoDao.findAll(example, pageable);
         baseResult.setVideoList(all.getContent());
         baseResult.setTotalPage(all.getTotalPages());
+        baseResult.setTotalRecord((int)all.getTotalElements());
         baseResult.setCurrentPage(currentPage);
         return baseResult;
+    }
+
+    @GetMapping("/close")
+    public String closeService(){
+        LoginInterceptor.globalSwitch = LoginInterceptor.SWITCH_CLOSE;
+        return RES_SUCESS;
+    }
+
+    @GetMapping("/open")
+    public String openService(){
+        LoginInterceptor.globalSwitch = null;
+        return RES_SUCESS;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }
