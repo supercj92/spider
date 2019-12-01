@@ -2,18 +2,22 @@ package com.cfysu.task;
 
 import com.cfysu.dao.VideoDao;
 import com.cfysu.model.BaseResult;
+import com.cfysu.model.Task;
 import com.cfysu.model.Video;
 import com.cfysu.service.HttpService;
 import com.cfysu.service.ParseService;
 import com.cfysu.util.RandomIPAdderssUtils;
 import io.reactivex.Observable;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import retrofit2.HttpException;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +27,7 @@ import java.util.List;
 @Slf4j
 @Service
 @EnableScheduling
-public class FetchTask {
+public class FetchTask implements InitializingBean {
 
     @Autowired
     private HttpService httpService;
@@ -126,5 +130,19 @@ public class FetchTask {
 
     public void setTotalPage(Integer totalPage) {
         this.totalPage = totalPage;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("resume task from disk...");
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("/upload/task.data"));
+        Task task = (Task)objectInputStream.readObject();
+        if(task.getCategory() != null){
+            this.category = task.getCategory();
+        }
+
+        if(task.getCurrentPage() != null){
+            this.currentPage = task.getCurrentPage();
+        }
     }
 }

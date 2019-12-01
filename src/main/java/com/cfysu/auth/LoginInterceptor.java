@@ -12,7 +12,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //获取请求的地址（根域名以外的部分）
         String uri = request.getRequestURI();
-        if (uri.indexOf("/login") >= 0){
+        if (uri.contains("/login")){
             return true;
         }
         //获取session，有就是说明已经登录，没有就是拦截访问并跳转到登录页面

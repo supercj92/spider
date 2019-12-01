@@ -1,25 +1,28 @@
 package com.cfysu.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import javax.servlet.http.HttpServletRequest;
+
 import com.cfysu.dao.VideoDao;
 import com.cfysu.model.BaseResult;
 import com.cfysu.model.Video;
 import com.cfysu.task.FetchTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Created by Administrator on 2019/11/9.
  */
 @RestController
-public class HttpController {
+@RequestMapping("/res")
+public class ResController {
     @Autowired
     private FetchTask fetchTask;
 
