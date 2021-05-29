@@ -143,16 +143,16 @@ public class FetchTask implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        log.info("resume task from disk...");
-        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("/upload/task.data"));
-        Task task = (Task)objectInputStream.readObject();
-        if(task != null && task.getCategory() != null){
-            this.category = task.getCategory();
-        }
-
-        if(task != null && task.getCurrentPage() != null){
-            this.currentPage = task.getCurrentPage();
-        }
+//        log.info("resume task from disk...");
+//        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("/upload/task.data"));
+//        Task task = (Task)objectInputStream.readObject();
+//        if(task != null && task.getCategory() != null){
+//            this.category = task.getCategory();
+//        }
+//
+//        if(task != null && task.getCurrentPage() != null){
+//            this.currentPage = task.getCurrentPage();
+//        }
         log.info("task from disk...category:{},page:{}", category, currentPage);
     }
 }
